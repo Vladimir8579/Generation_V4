@@ -175,7 +175,7 @@
             this.PanelPatchSave.Controls.Add(this.label7);
             this.PanelPatchSave.Controls.Add(this.SelectPathSave);
             this.PanelPatchSave.Controls.Add(this.textBoxSelectPathSave);
-            this.PanelPatchSave.Location = new System.Drawing.Point(9, 506);
+            this.PanelPatchSave.Location = new System.Drawing.Point(9, 507);
             this.PanelPatchSave.Name = "PanelPatchSave";
             this.PanelPatchSave.Size = new System.Drawing.Size(819, 155);
             this.PanelPatchSave.TabIndex = 44;
@@ -368,7 +368,7 @@
             // 
             this.Generation.Enabled = false;
             this.Generation.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Generation.Location = new System.Drawing.Point(9, 675);
+            this.Generation.Location = new System.Drawing.Point(9, 673);
             this.Generation.Margin = new System.Windows.Forms.Padding(4);
             this.Generation.Name = "Generation";
             this.Generation.Size = new System.Drawing.Size(160, 50);
@@ -499,7 +499,7 @@
             // Exit
             // 
             this.Exit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Exit.Location = new System.Drawing.Point(668, 675);
+            this.Exit.Location = new System.Drawing.Point(668, 673);
             this.Exit.Margin = new System.Windows.Forms.Padding(4);
             this.Exit.Name = "Exit";
             this.Exit.Size = new System.Drawing.Size(160, 50);
@@ -564,7 +564,7 @@
             this.PanelExcel.Controls.Add(this.toolStrip2);
             this.PanelExcel.Controls.Add(this.toolStrip1);
             this.PanelExcel.Controls.Add(this.label6);
-            this.PanelExcel.Location = new System.Drawing.Point(9, 343);
+            this.PanelExcel.Location = new System.Drawing.Point(9, 342);
             this.PanelExcel.Name = "PanelExcel";
             this.PanelExcel.Size = new System.Drawing.Size(819, 147);
             this.PanelExcel.TabIndex = 43;
@@ -574,7 +574,7 @@
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.LblStatus);
             this.panel1.Controls.Add(this.ProgressBar);
-            this.panel1.Location = new System.Drawing.Point(176, 675);
+            this.panel1.Location = new System.Drawing.Point(176, 673);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(485, 50);
             this.panel1.TabIndex = 45;
