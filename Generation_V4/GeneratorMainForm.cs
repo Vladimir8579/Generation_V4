@@ -254,9 +254,6 @@ namespace Generation_V4
 
         public void Generation_Click(object sender, EventArgs e)// Генерация актов
         {
-            //Получение количества столбцов и строк для внесение имен переменных
-            //и использовании индексов в дальнейшем
-            //
             //Инициализация переменной для счётчика итераций
             //
             int Counter = 0;
@@ -316,11 +313,12 @@ namespace Generation_V4
                     //
                     //Удаление не отмеченных закладок
                     //
+
                     for (int i = 0; i < checkedListBox1.Items.Count; i++)
                     {
-                        string BookmarkName = checkedListBox1.Items[i].ToString();
                         if (checkedListBox1.GetItemChecked(i) == false)
                         {
+                            string BookmarkName = checkedListBox1.Items[i].ToString();
                             app.ActiveDocument.Bookmarks[BookmarkName].Range.Delete();
                         }
                     }
@@ -400,7 +398,6 @@ namespace Generation_V4
                                         (FindText: FindTextFooter, ReplaceWith: ReplaceWithFooter, Replace: replace);
                                 }
                             }
-
                             #endregion
                         }
                     }
@@ -519,11 +516,11 @@ namespace Generation_V4
             }
             finally
             {
-                    app?.ActiveDocument.Close(SaveChanges: 0);
-                    app?.Quit(SaveChanges: 0);              
+                app?.ActiveDocument.Close(SaveChanges: 0);
+                app?.Quit(SaveChanges: 0);
             }
         }
-
+        
         private void Exit_Click(object sender, EventArgs e)// Завершение работы приложения
         {
             Application.Exit();
