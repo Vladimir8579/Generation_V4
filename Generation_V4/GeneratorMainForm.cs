@@ -11,16 +11,15 @@ namespace Generation_V4
     public partial class GeneratorMainForm : Form
     {
         private string filename = string.Empty;//Путь к файлу Excel
-        private string filename2 = string.Empty;//Путь к файлу Word        
+        private string filename2 = string.Empty;//Путь к файлу Word
+        private string PathFolder = "";
         public DataTableCollection tableCollection = null;
-        public DataTable Table1 = null;
-        public DataTable Table2 = null;
-        int CountColumnsTable1 = 0;
-        int CountRowTable1 = 0;
-        int CountColumnsTable2 = 0;
-        int CountRowTable2 = 0;
-
-
+        public DataTable Table1 = null;// инициализируем таблицу данных, для первого листа Excel, в памяти
+        public DataTable Table2 = null;// инициализируем таблицу данных, для второго листа Excel, в памяти
+        int CountColumnsTable1 = 0;//инициализируем количество столбцов в первом листе Excel
+        int CountRowTable1 = 0;//инициализируем количество строк в первом листе Excel
+        int CountColumnsTable2 = 0;//инициализируем количество столбцов во втором листе Excel
+        int CountRowTable2 = 0;//инициализируем количество строк во втором листе Excel
 
         public GeneratorMainForm()
         {
@@ -53,19 +52,18 @@ namespace Generation_V4
                     //
                     //Получение имени закладки и создание соответствующе именованных чекбоксов
                     //
-                    int NumberBookmarksEnd = app.ActiveDocument.Bookmarks.Count;
+
                     checkedListBox1.Items.Clear();
-                    for (int i = 1; i <= NumberBookmarksEnd; i++)
+                    for (int i = 1; i <= app.ActiveDocument.Bookmarks.Count; i++)
                     {
-                        string bookmarks = app.ActiveDocument.Bookmarks[i].Name;
-                        checkedListBox1.Items.Add(bookmarks);
+                        checkedListBox1.Items.Add(app.ActiveDocument.Bookmarks[i].Name);
                     }
                     //
                     //Получение количества таблиц в документе и создание чекбоксов
                     //
-                    int TableNumber = app.ActiveDocument.Tables.Count;
+
                     checkedListBox2.Items.Clear();
-                    for (int i = 1; i <= TableNumber; i++)
+                    for (int i = 1; i <= app.ActiveDocument.Tables.Count; i++)
                     {
                         checkedListBox2.Items.Add("Таблица " + i + " " + app.ActiveDocument.Tables[i].Title);
                     }
@@ -107,11 +105,15 @@ namespace Generation_V4
                     toolStripComboBox2.Items.Clear();
                     tableCollection = db.Tables;
                     toolStripComboBox1.Items.Clear();
-                    foreach (DataTable Table1 in tableCollection)
+
+                    if (db.Tables.Count > 0)
                     {
-                        toolStripComboBox1.Items.Add(Table1.TableName);
+                        foreach (DataTable Table1 in tableCollection)
+                        {
+                            toolStripComboBox1.Items.Add(Table1.TableName);
+                        }
+                        toolStripComboBox1.SelectedIndex = 0;
                     }
-                    toolStripComboBox1.SelectedIndex = 0;
                 }
 
                 catch (Exception ex)
@@ -152,7 +154,7 @@ namespace Generation_V4
 
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка1", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Ошибка в блоке OpenExcelFile", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -177,7 +179,7 @@ namespace Generation_V4
 
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка2", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Ошибка в блоке SelectExcel", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -193,6 +195,7 @@ namespace Generation_V4
 
                 {
                     textBoxSelectPathSave.Text = FBD.SelectedPath;
+                    PathFolder = FBD.SelectedPath;
                 }
                 else
                 {
@@ -201,7 +204,7 @@ namespace Generation_V4
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка3", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Ошибка в блоке SelectPathSave", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -209,22 +212,25 @@ namespace Generation_V4
         {
             try
             {
+
                 Table1 = tableCollection[Convert.ToString(toolStripComboBox1.SelectedItem)];
-                if (Table1 != null)
+                if (Table1.Rows.Count > 0)
                 {
-                    CountColumnsTable1 = Table1.Columns.Count;
-                    CountRowTable1 = Table1.Rows.Count;
-                }
+                    {
+                        CountColumnsTable1 = Table1.Columns.Count;
+                        CountRowTable1 = Table1.Rows.Count;
+                    }
 
-                int NumberOfColumn = Table1.Columns.Count;
-                comboBox1.Items.Clear();
-                for (int l = 0; l < NumberOfColumn; l++)
-                {
-                    comboBox1.Items.Add(Table1.Columns[l].ColumnName);
-                }
+                    int NumberOfColumn = Table1.Columns.Count;
+                    comboBox1.Items.Clear();
+                    for (int l = 0; l < NumberOfColumn; l++)
+                    {
+                        comboBox1.Items.Add(Table1.Columns[l].ColumnName);
+                    }
 
-                LblStatus.Text = "Будет создано " + Table1.Rows.Count + " комплект(a)(ов) документов";
-                comboBox1.SelectedIndex = 0;
+                    LblStatus.Text = "Будет создано " + Table1.Rows.Count + " комплект(a)(ов) документов";
+                    comboBox1.SelectedIndex = 0;
+                }
 
             }
 
@@ -248,35 +254,29 @@ namespace Generation_V4
 
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка5", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Ошибка в блоке ToolStripComboBox2", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         public void Generation_Click(object sender, EventArgs e)// Генерация актов
         {
+            //
             //Инициализация переменной для счётчика итераций
             //
             int Counter = 0;
-            //
-            //
-            //
+
             ProgressBar.Maximum = Table1.Rows.Count;
+
             Word.Application app = new Word.Application();
-            //app.Visible = true;
-            //Переменная содержит путь к директории куда складывать готовые файлы
-            string PathFolder = textBoxSelectPathSave.Text;
+            app.Visible = true;
 
             try
             {
                 for (int m = 0; m < CountRowTable1; m++)
                 {
-                    //Создаём переменную, которая указывает с какого столбца брать имена для файлов,
-                    //далее загоняем переменную в цикл
-                    int IndexSelect = comboBox1.SelectedIndex;
-
-                    /*Создаём листы в которых будут храниться имена всех столбцов (наименование переменных)
-                    в нашем случае мы выбрали HeaderText в dataGridView1 */
-
+                    //
+                    //Создаём листы в которых будут храниться имена всех столбцов (наименование переменных)
+                    //
                     ArrayList list = new ArrayList();
                     if (toolStripComboBox1.Text != "")
                     {
@@ -295,13 +295,13 @@ namespace Generation_V4
                         }
                     }
                     //
-                    //Задаём имя новому файлу
+                    //Задаём имя новым файлам
                     //                    
-                    object fileNameEkz1Docx = PathFolder + "\\" + "Экз №1 " + Table1.Rows[m][IndexSelect].ToString() + ".docx";
-                    object fileNameEkz2Docx = PathFolder + "\\" + "Экз №2 " + Table1.Rows[m][IndexSelect].ToString() + ".docx";
+                    object fileNameEkz1Docx = PathFolder + "\\" + "Экз №1 " + Table1.Rows[m][comboBox1.SelectedIndex].ToString() + ".docx";
+                    object fileNameEkz2Docx = PathFolder + "\\" + "Экз №2 " + Table1.Rows[m][comboBox1.SelectedIndex].ToString() + ".docx";
 
-                    object fileNameEkz1Pdf = PathFolder + "\\" + "Экз №1 " + Table1.Rows[m][IndexSelect].ToString() + ".pdf";
-                    object fileNameEkz2Pdf = PathFolder + "\\" + "Экз №2 " + Table1.Rows[m][IndexSelect].ToString() + ".pdf";
+                    object fileNameEkz1Pdf = PathFolder + "\\" + "Экз №1 " + Table1.Rows[m][comboBox1.SelectedIndex].ToString() + ".pdf";
+                    object fileNameEkz2Pdf = PathFolder + "\\" + "Экз №2 " + Table1.Rows[m][comboBox1.SelectedIndex].ToString() + ".pdf";
 
                     object oMissing = System.Reflection.Missing.Value;
                     object oEndOfDoc = "\\endofdoc"; /* \endofdoc это предопределенная закладка */
@@ -313,7 +313,6 @@ namespace Generation_V4
                     //
                     //Удаление не отмеченных закладок
                     //
-
                     for (int i = 0; i < checkedListBox1.Items.Count; i++)
                     {
                         if (checkedListBox1.GetItemChecked(i) == false)
@@ -379,10 +378,13 @@ namespace Generation_V4
                     {
                         for (int j = 0; j < CountColumnsTable1; j++)
                         {
-                            find.Text = "{$" + (string)list[j] + "$}";// что меняем переменные в шаблоне
-                            find.Replacement.Text = Table1.Rows[m][(string)list[j]].ToString();// на что меняем значение переменных из Excel
+                            find.Text = "{$" + (string)list[j] + "$}";// что меняем, переменные в шаблоне
+                            find.Replacement.Text = Table1.Rows[m][(string)list[j]].ToString();// на что меняем, значение переменных из Excel
                             find.Execute(FindText: Type.Missing, Wrap: wrap, ReplaceWith: missing, Replace: replace);
+                            //
+                            //Замена переменных в нижних колонтитулах
                             //блок кода увеличивает время выполнения программы в 2.5 раза
+                            //
                             #region
                             if (CheckColontitul.Checked)
                             {
@@ -409,12 +411,18 @@ namespace Generation_V4
                         for (int j = 0; j < CountColumnsTable2; j++)
                         {
                             find.Text = "[$" + (string)list2[j] + "$]";// что меняем
+                            //
+                            //Земена одной переменной в таблице WORD на несколько значений со 2 листа Excel
+                            //Ограничение string и метода Find 255 символов, циклически заменяем переменную в WORD и
+                            //обходим ограничение в 255 символов путем дописывания этой же переменной после её замены
+                            //
                             ArrayList spisok = new ArrayList();
                             for (int i = 0; i < CountRowTable2; i++)
                             {
                                 if (Table2.Rows[i][j].ToString() != "")
                                     spisok.Add(Table2.Rows[i][j].ToString());
                             }
+
                             int SizeArraySpisok = spisok.Count - 1;
                             for (int a = 0; a <= SizeArraySpisok; a++)
                             {
@@ -512,7 +520,7 @@ namespace Generation_V4
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка6", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Ошибка  в блоке Generation", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -520,7 +528,7 @@ namespace Generation_V4
                 app?.Quit(SaveChanges: 0);
             }
         }
-        
+
         private void Exit_Click(object sender, EventArgs e)// Завершение работы приложения
         {
             Application.Exit();
