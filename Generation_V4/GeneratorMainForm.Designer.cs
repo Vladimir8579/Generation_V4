@@ -37,6 +37,8 @@
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.PanelPatchSave = new System.Windows.Forms.Panel();
+            this.label12 = new System.Windows.Forms.Label();
+            this.FixedColontitul = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.CheckColontitul = new System.Windows.Forms.CheckBox();
@@ -67,6 +69,8 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.PanelExcel = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.ОпрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PanelPatchSave.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.PanelWord.SuspendLayout();
@@ -74,6 +78,7 @@
             this.toolStrip1.SuspendLayout();
             this.PanelExcel.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripLabel2
@@ -166,6 +171,8 @@
             // PanelPatchSave
             // 
             this.PanelPatchSave.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PanelPatchSave.Controls.Add(this.label12);
+            this.PanelPatchSave.Controls.Add(this.FixedColontitul);
             this.PanelPatchSave.Controls.Add(this.label11);
             this.PanelPatchSave.Controls.Add(this.label10);
             this.PanelPatchSave.Controls.Add(this.CheckColontitul);
@@ -175,10 +182,41 @@
             this.PanelPatchSave.Controls.Add(this.label7);
             this.PanelPatchSave.Controls.Add(this.SelectPathSave);
             this.PanelPatchSave.Controls.Add(this.textBoxSelectPathSave);
-            this.PanelPatchSave.Location = new System.Drawing.Point(9, 507);
+            this.PanelPatchSave.Location = new System.Drawing.Point(9, 516);
             this.PanelPatchSave.Name = "PanelPatchSave";
-            this.PanelPatchSave.Size = new System.Drawing.Size(819, 155);
+            this.PanelPatchSave.Size = new System.Drawing.Size(819, 185);
             this.PanelPatchSave.TabIndex = 44;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label12.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label12.Location = new System.Drawing.Point(11, 152);
+            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label12.MaximumSize = new System.Drawing.Size(240, 24);
+            this.label12.MinimumSize = new System.Drawing.Size(240, 24);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(240, 24);
+            this.label12.TabIndex = 45;
+            this.label12.Text = "Замена текста в колонтитулах";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // FixedColontitul
+            // 
+            this.FixedColontitul.AutoSize = true;
+            this.FixedColontitul.Checked = true;
+            this.FixedColontitul.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.FixedColontitul.Location = new System.Drawing.Point(258, 152);
+            this.FixedColontitul.MaximumSize = new System.Drawing.Size(260, 24);
+            this.FixedColontitul.MinimumSize = new System.Drawing.Size(260, 24);
+            this.FixedColontitul.Name = "FixedColontitul";
+            this.FixedColontitul.Size = new System.Drawing.Size(260, 24);
+            this.FixedColontitul.TabIndex = 44;
+            this.FixedColontitul.Text = "Задать фиксированные колонтитулы";
+            this.FixedColontitul.UseVisualStyleBackColor = true;
+            this.FixedColontitul.CheckedChanged += new System.EventHandler(this.FixedColontitul_CheckedChanged);
             // 
             // label11
             // 
@@ -221,8 +259,9 @@
             this.CheckColontitul.Name = "CheckColontitul";
             this.CheckColontitul.Size = new System.Drawing.Size(260, 24);
             this.CheckColontitul.TabIndex = 43;
-            this.CheckColontitul.Text = "Редактировать колонтитулы";
+            this.CheckColontitul.Text = "Заменить колонтитулы переменными";
             this.CheckColontitul.UseVisualStyleBackColor = true;
+            this.CheckColontitul.CheckedChanged += new System.EventHandler(this.CheckColontitul_CheckedChanged);
             // 
             // CheckBoxSaveToPdf
             // 
@@ -240,7 +279,7 @@
             // 
             this.numericUpDown1.Location = new System.Drawing.Point(259, 49);
             this.numericUpDown1.Maximum = new decimal(new int[] {
-            2,
+            3,
             0,
             0,
             0});
@@ -368,7 +407,7 @@
             // 
             this.Generation.Enabled = false;
             this.Generation.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Generation.Location = new System.Drawing.Point(9, 673);
+            this.Generation.Location = new System.Drawing.Point(9, 713);
             this.Generation.Margin = new System.Windows.Forms.Padding(4);
             this.Generation.Name = "Generation";
             this.Generation.Size = new System.Drawing.Size(160, 50);
@@ -397,7 +436,7 @@
             this.PanelWord.Controls.Add(this.label1);
             this.PanelWord.Controls.Add(this.SelectWord);
             this.PanelWord.Controls.Add(this.textBox1SelectWord);
-            this.PanelWord.Location = new System.Drawing.Point(9, 2);
+            this.PanelWord.Location = new System.Drawing.Point(9, 25);
             this.PanelWord.Name = "PanelWord";
             this.PanelWord.Size = new System.Drawing.Size(819, 324);
             this.PanelWord.TabIndex = 42;
@@ -499,7 +538,7 @@
             // Exit
             // 
             this.Exit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Exit.Location = new System.Drawing.Point(668, 673);
+            this.Exit.Location = new System.Drawing.Point(668, 713);
             this.Exit.Margin = new System.Windows.Forms.Padding(4);
             this.Exit.Name = "Exit";
             this.Exit.Size = new System.Drawing.Size(160, 50);
@@ -564,7 +603,7 @@
             this.PanelExcel.Controls.Add(this.toolStrip2);
             this.PanelExcel.Controls.Add(this.toolStrip1);
             this.PanelExcel.Controls.Add(this.label6);
-            this.PanelExcel.Location = new System.Drawing.Point(9, 342);
+            this.PanelExcel.Location = new System.Drawing.Point(9, 359);
             this.PanelExcel.Name = "PanelExcel";
             this.PanelExcel.Size = new System.Drawing.Size(819, 147);
             this.PanelExcel.TabIndex = 43;
@@ -574,25 +613,44 @@
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.LblStatus);
             this.panel1.Controls.Add(this.ProgressBar);
-            this.panel1.Location = new System.Drawing.Point(176, 673);
+            this.panel1.Location = new System.Drawing.Point(176, 713);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(485, 50);
             this.panel1.TabIndex = 45;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ОпрограммеToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(835, 24);
+            this.menuStrip1.TabIndex = 46;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // ОпрограммеToolStripMenuItem
+            // 
+            this.ОпрограммеToolStripMenuItem.Name = "ОпрограммеToolStripMenuItem";
+            this.ОпрограммеToolStripMenuItem.Size = new System.Drawing.Size(163, 20);
+            this.ОпрограммеToolStripMenuItem.Text = "О программе/инструкция";
+            this.ОпрограммеToolStripMenuItem.Click += new System.EventHandler(this.ОпрограммеToolStripMenuItem_Click);
             // 
             // GeneratorMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(835, 731);
+            this.ClientSize = new System.Drawing.Size(835, 771);
             this.Controls.Add(this.PanelPatchSave);
             this.Controls.Add(this.Generation);
             this.Controls.Add(this.PanelWord);
             this.Controls.Add(this.Exit);
             this.Controls.Add(this.PanelExcel);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(851, 770);
-            this.MinimumSize = new System.Drawing.Size(851, 770);
+            this.MaximumSize = new System.Drawing.Size(851, 810);
+            this.MinimumSize = new System.Drawing.Size(851, 810);
             this.Name = "GeneratorMainForm";
             this.Text = "Generator_V4";
             this.PanelPatchSave.ResumeLayout(false);
@@ -608,7 +666,10 @@
             this.PanelExcel.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -653,6 +714,10 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.Panel PanelExcel;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.CheckBox FixedColontitul;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem ОпрограммеToolStripMenuItem;
     }
 }
 

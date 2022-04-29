@@ -52,20 +52,18 @@ namespace Generation_V4
                     //
                     //Получение имени закладки и создание соответствующе именованных чекбоксов
                     //
-
                     checkedListBox1.Items.Clear();
-                    for (int i = 1; i <= app.ActiveDocument.Bookmarks.Count; i++)
+                    for (int NumberBookmark = 1; NumberBookmark <= app.ActiveDocument.Bookmarks.Count; NumberBookmark++)
                     {
-                        checkedListBox1.Items.Add(app.ActiveDocument.Bookmarks[i].Name);
+                        checkedListBox1.Items.Add(app.ActiveDocument.Bookmarks[NumberBookmark].Name);
                     }
                     //
                     //Получение количества таблиц в документе и создание чекбоксов
                     //
-
                     checkedListBox2.Items.Clear();
-                    for (int i = 1; i <= app.ActiveDocument.Tables.Count; i++)
+                    for (int NumberTable = 1; NumberTable <= app.ActiveDocument.Tables.Count; NumberTable++)
                     {
-                        checkedListBox2.Items.Add("Таблица " + i + " " + app.ActiveDocument.Tables[i].Title);
+                        checkedListBox2.Items.Add("Таблица " + NumberTable + " " + app.ActiveDocument.Tables[NumberTable].Title);
                     }
 
                     app.Documents.Close();
@@ -102,9 +100,9 @@ namespace Generation_V4
                 //
                 try
                 {
-                    toolStripComboBox2.Items.Clear();
-                    tableCollection = db.Tables;
+                    toolStripComboBox2.Items.Clear();                    
                     toolStripComboBox1.Items.Clear();
+                    tableCollection = db.Tables;
 
                     if (db.Tables.Count > 0)
                     {
@@ -126,8 +124,8 @@ namespace Generation_V4
                 try
                 {
                     toolStripComboBox2.Items.Clear();
-                    tableCollection = db.Tables;
-                    toolStripComboBox2.Items.Clear();
+                    tableCollection = db.Tables;                    
+
                     if (db.Tables.Count > 1)
                     {
                         foreach (DataTable Table1 in tableCollection)
@@ -150,6 +148,7 @@ namespace Generation_V4
                     MessageBox.Show(ex.Message, "В Excel нет листа номер 2", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
+                reader.Close();
             }
 
             catch (Exception ex)
@@ -167,7 +166,6 @@ namespace Generation_V4
                 if (res == DialogResult.OK)
                 {
                     filename = openFileDialog1.FileName;
-                    Text = filename;
                     textBoxSelectExcel.Text = filename.ToString();
                     OpenExcelFile(filename);
                 }
@@ -194,8 +192,7 @@ namespace Generation_V4
                 if (FBD.ShowDialog() == DialogResult.OK)
 
                 {
-                    textBoxSelectPathSave.Text = FBD.SelectedPath;
-                    PathFolder = FBD.SelectedPath;
+                    textBoxSelectPathSave.Text = PathFolder = FBD.SelectedPath;                    
                 }
                 else
                 {
@@ -208,7 +205,7 @@ namespace Generation_V4
             }
         }
 
-        public void ToolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)// Обработка значений из 1-го листа Exсel
+        private void ToolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)// Обработка значений из 1-го листа Exсel
         {
             try
             {
@@ -221,11 +218,10 @@ namespace Generation_V4
                         CountRowTable1 = Table1.Rows.Count;
                     }
 
-                    int NumberOfColumn = Table1.Columns.Count;
                     comboBox1.Items.Clear();
-                    for (int l = 0; l < NumberOfColumn; l++)
+                    for (int NumberColumnTable1 = 0; NumberColumnTable1 < Table1.Columns.Count; NumberColumnTable1++)
                     {
-                        comboBox1.Items.Add(Table1.Columns[l].ColumnName);
+                        comboBox1.Items.Add(Table1.Columns[NumberColumnTable1].ColumnName);
                     }
 
                     LblStatus.Text = "Будет создано " + Table1.Rows.Count + " комплект(a)(ов) документов";
@@ -240,7 +236,7 @@ namespace Generation_V4
             }
         }
 
-        public void ToolStripComboBox2_SelectedIndexChanged(object sender, EventArgs e)// Обработка значений из 2-го листа Exсel
+        private void ToolStripComboBox2_SelectedIndexChanged(object sender, EventArgs e)// Обработка значений из 2-го листа Exсel
         {
             try
             {
@@ -258,7 +254,7 @@ namespace Generation_V4
             }
         }
 
-        public void Generation_Click(object sender, EventArgs e)// Генерация актов
+        private void Generation_Click(object sender, EventArgs e)// Генерация актов
         {
             //
             //Инициализация переменной для счётчика итераций
@@ -268,40 +264,43 @@ namespace Generation_V4
             ProgressBar.Maximum = Table1.Rows.Count;
 
             Word.Application app = new Word.Application();
-            app.Visible = true;
+            //app.Visible = true;
 
             try
             {
-                for (int m = 0; m < CountRowTable1; m++)
+                for (int NumberRowSheet1Excel = 0; NumberRowSheet1Excel < CountRowTable1; NumberRowSheet1Excel++)
                 {
                     //
                     //Создаём листы в которых будут храниться имена всех столбцов (наименование переменных)
                     //
-                    ArrayList list = new ArrayList();
+                    ArrayList Variables = new ArrayList();
                     if (toolStripComboBox1.Text != "")
                     {
                         for (int i = 0; i < CountColumnsTable1; i++)
                         {
-                            list.Add(Table1.Columns[i].ColumnName.ToString());
+                            Variables.Add(Table1.Columns[i].ColumnName.ToString());
                         }
                     }
 
-                    ArrayList list2 = new ArrayList();
+                    ArrayList ListVariables = new ArrayList();
                     if (toolStripComboBox2.Text != "")
                     {
                         for (int i = 0; i < CountColumnsTable2; i++)
                         {
-                            list2.Add(Table2.Columns[i].ColumnName.ToString());
+                            ListVariables.Add(Table2.Columns[i].ColumnName.ToString());
                         }
                     }
                     //
                     //Задаём имя новым файлам
                     //                    
-                    object fileNameEkz1Docx = PathFolder + "\\" + "Экз №1 " + Table1.Rows[m][comboBox1.SelectedIndex].ToString() + ".docx";
-                    object fileNameEkz2Docx = PathFolder + "\\" + "Экз №2 " + Table1.Rows[m][comboBox1.SelectedIndex].ToString() + ".docx";
+                    object fileNameEkz1Docx = PathFolder + "\\" + "Экз №1 " + comboBox1.Text + Table1.Rows[NumberRowSheet1Excel][comboBox1.SelectedIndex].ToString() + ".docx";
+                    object fileNameEkz2Docx = PathFolder + "\\" + "Экз №2 " + comboBox1.Text + Table1.Rows[NumberRowSheet1Excel][comboBox1.SelectedIndex].ToString() + ".docx";
+                    object fileNameEkz3Docx = PathFolder + "\\" + "Экз №3 " + comboBox1.Text + Table1.Rows[NumberRowSheet1Excel][comboBox1.SelectedIndex].ToString() + ".docx";
 
-                    object fileNameEkz1Pdf = PathFolder + "\\" + "Экз №1 " + Table1.Rows[m][comboBox1.SelectedIndex].ToString() + ".pdf";
-                    object fileNameEkz2Pdf = PathFolder + "\\" + "Экз №2 " + Table1.Rows[m][comboBox1.SelectedIndex].ToString() + ".pdf";
+                    object fileNameEkz1Pdf = PathFolder + "\\" + "Экз №1 " + comboBox1.Text + Table1.Rows[NumberRowSheet1Excel][comboBox1.SelectedIndex].ToString() + ".pdf";
+                    object fileNameEkz2Pdf = PathFolder + "\\" + "Экз №2 " + comboBox1.Text + Table1.Rows[NumberRowSheet1Excel][comboBox1.SelectedIndex].ToString() + ".pdf";
+                    object fileNameEkz3Pdf = PathFolder + "\\" + "Экз №3 " + comboBox1.Text + Table1.Rows[NumberRowSheet1Excel][comboBox1.SelectedIndex].ToString() + ".pdf";
+
 
                     object oMissing = System.Reflection.Missing.Value;
                     object oEndOfDoc = "\\endofdoc"; /* \endofdoc это предопределенная закладка */
@@ -313,11 +312,11 @@ namespace Generation_V4
                     //
                     //Удаление не отмеченных закладок
                     //
-                    for (int i = 0; i < checkedListBox1.Items.Count; i++)
+                    for (int IndexSavedBookmark = 0; IndexSavedBookmark < checkedListBox1.Items.Count; IndexSavedBookmark++)
                     {
-                        if (checkedListBox1.GetItemChecked(i) == false)
+                        if (checkedListBox1.GetItemChecked(IndexSavedBookmark) == false)
                         {
-                            string BookmarkName = checkedListBox1.Items[i].ToString();
+                            string BookmarkName = checkedListBox1.Items[IndexSavedBookmark].ToString();
                             app.ActiveDocument.Bookmarks[BookmarkName].Range.Delete();
                         }
                     }
@@ -328,11 +327,11 @@ namespace Generation_V4
                     //
                     int NumberCheckTable = checkedListBox2.Items.Count;
 
-                    for (int i = 0; i < NumberCheckTable; i++)
+                    for (int IndexEditTable = 0; IndexEditTable < NumberCheckTable; IndexEditTable++)
                     {
-                        if (checkedListBox2.GetItemChecked(i) == true)
+                        if (checkedListBox2.GetItemChecked(IndexEditTable) == true)
                         {
-                            Word.Table TableWord = app.ActiveDocument.Tables[i + 1];
+                            Word.Table TableWord = app.ActiveDocument.Tables[IndexEditTable + 1];
                             int NumberRowsTable = TableWord.Rows.Count;
 
                             for (int z = NumberRowsTable; z > 0; z--)
@@ -378,8 +377,8 @@ namespace Generation_V4
                     {
                         for (int j = 0; j < CountColumnsTable1; j++)
                         {
-                            find.Text = "{$" + (string)list[j] + "$}";// что меняем, переменные в шаблоне
-                            find.Replacement.Text = Table1.Rows[m][(string)list[j]].ToString();// на что меняем, значение переменных из Excel
+                            find.Text = "{$" + (string)Variables[j] + "$}";// что меняем, переменные в шаблоне
+                            find.Replacement.Text = Table1.Rows[NumberRowSheet1Excel][(string)Variables[j]].ToString();// на что меняем, значение переменных из Excel
                             find.Execute(FindText: Type.Missing, Wrap: wrap, ReplaceWith: missing, Replace: replace);
                             //
                             //Замена переменных в нижних колонтитулах
@@ -388,19 +387,34 @@ namespace Generation_V4
                             #region
                             if (CheckColontitul.Checked)
                             {
-                                object FindTextFooter = "{$" + (string)list[j] + "$}";// что меняем
-                                object ReplaceWithFooter = Table1.Rows[m][(string)list[j]].ToString(); // на что меняем
+                                object FindTextFooter = "{$" + (string)Variables[j] + "$}";// что меняем
+                                object ReplaceWithFooter = Table1.Rows[NumberRowSheet1Excel][(string)Variables[j]].ToString(); // на что меняем
                                 for (int i = 1; i <= SectionCount; i++)
                                 {
-                                    app.ActiveDocument.Sections[1].Footers[Word.WdHeaderFooterIndex.wdHeaderFooterPrimary].Range.Find.Execute
+                                    app.ActiveDocument.Sections[i].Footers[Word.WdHeaderFooterIndex.wdHeaderFooterPrimary].Range.Find.Execute
                                         (FindText: FindTextFooter, ReplaceWith: ReplaceWithFooter, Replace: replace);
-                                    app.ActiveDocument.Sections[1].Footers[Word.WdHeaderFooterIndex.wdHeaderFooterFirstPage].Range.Find.Execute
+                                    app.ActiveDocument.Sections[i].Footers[Word.WdHeaderFooterIndex.wdHeaderFooterFirstPage].Range.Find.Execute
                                         (FindText: FindTextFooter, ReplaceWith: ReplaceWithFooter, Replace: replace);
-                                    app.ActiveDocument.Sections[1].Footers[Word.WdHeaderFooterIndex.wdHeaderFooterEvenPages].Range.Find.Execute
+                                    app.ActiveDocument.Sections[i].Footers[Word.WdHeaderFooterIndex.wdHeaderFooterEvenPages].Range.Find.Execute
                                         (FindText: FindTextFooter, ReplaceWith: ReplaceWithFooter, Replace: replace);
                                 }
                             }
                             #endregion
+                        }
+                    }
+
+                    if (FixedColontitul.Checked)
+                    {
+                        string ReplaceWithFooter = "Акт № " + Table1.Rows[NumberRowSheet1Excel][(string)Variables[2]].ToString() + "/ДИТ–" +
+                            Table1.Rows[NumberRowSheet1Excel][(string)Variables[3]].ToString() + "/" +
+                            Table1.Rows[NumberRowSheet1Excel][(string)Variables[0]].ToString() + "\n" +
+                            Table1.Rows[NumberRowSheet1Excel][(string)Variables[1]].ToString();
+
+                        for (int i = 1; i <= SectionCount; i++)
+                        {
+                            app.ActiveDocument.Sections[i].Footers[Word.WdHeaderFooterIndex.wdHeaderFooterPrimary].Range.Text = ReplaceWithFooter;
+                            app.ActiveDocument.Sections[i].Footers[Word.WdHeaderFooterIndex.wdHeaderFooterFirstPage].Range.Text = ReplaceWithFooter;
+                            app.ActiveDocument.Sections[i].Footers[Word.WdHeaderFooterIndex.wdHeaderFooterEvenPages].Range.Text = ReplaceWithFooter;
                         }
                     }
                     //
@@ -408,36 +422,35 @@ namespace Generation_V4
                     //
                     if (toolStripComboBox2.Text != "")
                     {
-                        for (int j = 0; j < CountColumnsTable2; j++)
+                        for (int CellNumber = 0; CellNumber < CountColumnsTable2; CellNumber++)
                         {
-                            find.Text = "[$" + (string)list2[j] + "$]";// что меняем
+                            find.Text = "[$" + (string)ListVariables[CellNumber] + "$]";// что меняем
                             //
                             //Земена одной переменной в таблице WORD на несколько значений со 2 листа Excel
                             //Ограничение string и метода Find 255 символов, циклически заменяем переменную в WORD и
                             //обходим ограничение в 255 символов путем дописывания этой же переменной после её замены
                             //
-                            ArrayList spisok = new ArrayList();
-                            for (int i = 0; i < CountRowTable2; i++)
+                            ArrayList ListVariablesFromExcel = new ArrayList();
+                            for (int NumberRow = 0; NumberRow < CountRowTable2; NumberRow++)
                             {
-                                if (Table2.Rows[i][j].ToString() != "")
-                                    spisok.Add(Table2.Rows[i][j].ToString());
+                                if (Table2.Rows[NumberRow][CellNumber].ToString() != "")
+                                    ListVariablesFromExcel.Add(Table2.Rows[NumberRow][CellNumber].ToString());
                             }
 
-                            int SizeArraySpisok = spisok.Count - 1;
+                            int SizeArraySpisok = ListVariablesFromExcel.Count - 1;
                             for (int a = 0; a <= SizeArraySpisok; a++)
                             {
                                 if (a < SizeArraySpisok)
-                                    find.Replacement.Text = (string)spisok[a] + "^p" + "[$" + (string)list2[j] + "$]";// на что меняем
+                                    find.Replacement.Text = (string)ListVariablesFromExcel[a] + "^p" + "[$" + (string)ListVariables[CellNumber] + "$]";// на что меняем
                                 else if (a == SizeArraySpisok)
                                 {
-                                    find.Replacement.Text = (string)spisok[a];
+                                    find.Replacement.Text = (string)ListVariablesFromExcel[a];
                                 }
                                 find.Execute(FindText: Type.Missing, Wrap: wrap, ReplaceWith: missing, Replace: replace);
                             }
                         }
                     }
 
-                    object Mirror = app.ActiveDocument.PageSetup.MirrorMargins;
                     if (app.ActiveDocument.Comments.Count > 0)
                     {
                         app.Application.ActiveDocument.DeleteAllComments();
@@ -446,6 +459,7 @@ namespace Generation_V4
                     //
                     //Сохранение в выбранном формате и количестве экземпляров с установкой номера экземпляра в колонтитуле
                     //
+                    //=====================================================================================================
                     if (((int)numericUpDown1.Value == 1) == true)// Если один экземпляр
                     {
                         object FindTextHeaders = "Экз"; // что меняем
@@ -470,7 +484,7 @@ namespace Generation_V4
                         ProgressBar.Update();
                         LblStatus.Text = "Выполнено " + Counter + " из " + CountRowTable1;
                     }
-
+                    //=====================================================================================================
                     if (((int)numericUpDown1.Value == 2) == true)// Если два экземпляра
                     {
                         object FindTextHeaders = "Экз"; // что меняем
@@ -511,6 +525,69 @@ namespace Generation_V4
                         ProgressBar.Update();
                         LblStatus.Text = "Выполнено " + Counter + " из " + CountRowTable1;
                     }
+                    //=====================================================================================================
+                    if (((int)numericUpDown1.Value == 3) == true)// Если три экземпляра
+                    {
+                        object FindTextHeaders = "Экз"; // что меняем
+                        object ReplaceWithHeaders = "Экз. №1"; // на что меняем
+                        for (int i = 1; i <= SectionCount; i++)
+                        {
+                            app.ActiveDocument.Sections[i].Headers[Word.WdHeaderFooterIndex.wdHeaderFooterPrimary].Range.Find.Execute
+                                (FindText: FindTextHeaders, ReplaceWith: ReplaceWithHeaders, Replace: replace);
+                            app.ActiveDocument.Sections[i].Headers[Word.WdHeaderFooterIndex.wdHeaderFooterFirstPage].Range.Find.Execute
+                                (FindText: FindTextHeaders, ReplaceWith: ReplaceWithHeaders, Replace: replace);
+                            app.ActiveDocument.Sections[i].Headers[Word.WdHeaderFooterIndex.wdHeaderFooterEvenPages].Range.Find.Execute
+                                (FindText: FindTextHeaders, ReplaceWith: ReplaceWithHeaders, Replace: replace);
+                        }
+
+                        app.ActiveDocument.SaveAs2(ref fileNameEkz1Docx);
+
+                        if (CheckBoxSaveToPdf.Checked)
+                            app.ActiveDocument.SaveAs2(ref fileNameEkz1Pdf, fileformat);//Сохраняем в формате PDF
+
+                        object FindTextHeaders2 = "Экз. №1"; // что меняем
+                        object ReplaceWithHeaders2 = "Экз. №2"; // на что меняем
+
+                        for (int i = 1; i <= SectionCount; i++)
+                        {
+                            app.ActiveDocument.Sections[i].Headers[Word.WdHeaderFooterIndex.wdHeaderFooterPrimary].Range.Find.Execute
+                                (FindText: FindTextHeaders2, ReplaceWith: ReplaceWithHeaders2, Replace: replace);
+                            app.ActiveDocument.Sections[i].Headers[Word.WdHeaderFooterIndex.wdHeaderFooterFirstPage].Range.Find.Execute
+                                (FindText: FindTextHeaders2, ReplaceWith: ReplaceWithHeaders2, Replace: replace);
+                            app.ActiveDocument.Sections[i].Headers[Word.WdHeaderFooterIndex.wdHeaderFooterEvenPages].Range.Find.Execute
+                                (FindText: FindTextHeaders2, ReplaceWith: ReplaceWithHeaders2, Replace: replace);
+                        }
+
+                        app.ActiveDocument.SaveAs2(ref fileNameEkz2Docx);
+                        if (CheckBoxSaveToPdf.Checked)
+                            app.ActiveDocument.SaveAs2(ref fileNameEkz2Pdf, fileformat);//Сохраняем в формате PDF
+
+
+                        object FindTextHeaders3 = "Экз. №2"; // что меняем
+                        object ReplaceWithHeaders3 = "Экз. №3"; // на что меняем
+
+                        for (int i = 1; i <= SectionCount; i++)
+                        {
+                            app.ActiveDocument.Sections[i].Headers[Word.WdHeaderFooterIndex.wdHeaderFooterPrimary].Range.Find.Execute
+                                (FindText: FindTextHeaders3, ReplaceWith: ReplaceWithHeaders3, Replace: replace);
+                            app.ActiveDocument.Sections[i].Headers[Word.WdHeaderFooterIndex.wdHeaderFooterFirstPage].Range.Find.Execute
+                                (FindText: FindTextHeaders3, ReplaceWith: ReplaceWithHeaders3, Replace: replace);
+                            app.ActiveDocument.Sections[i].Headers[Word.WdHeaderFooterIndex.wdHeaderFooterEvenPages].Range.Find.Execute
+                                (FindText: FindTextHeaders3, ReplaceWith: ReplaceWithHeaders3, Replace: replace);
+                        }
+
+                        app.ActiveDocument.SaveAs2(ref fileNameEkz3Docx);
+                        if (CheckBoxSaveToPdf.Checked)
+                            app.ActiveDocument.SaveAs2(ref fileNameEkz3Pdf, fileformat);//Сохраняем в формате PDF
+
+                        //=====================================================================================================
+
+                        Counter++;
+                        ProgressBar.Value = Counter;
+                        ProgressBar.Update();
+                        LblStatus.Text = "Выполнено " + Counter + " из " + CountRowTable1;
+                    }
+
                 }
 
                 MessageBox.Show("Готовые файлы находятся " + PathFolder);
@@ -527,6 +604,24 @@ namespace Generation_V4
                 app?.ActiveDocument.Close(SaveChanges: 0);
                 app?.Quit(SaveChanges: 0);
             }
+        }
+
+        private void CheckColontitul_CheckedChanged(object sender, EventArgs e)//Проверка способа создания колонтитулов из переменных
+        {
+            if (CheckColontitul.Checked)
+                FixedColontitul.Checked = false;
+        }
+
+        private void FixedColontitul_CheckedChanged(object sender, EventArgs e)//Проверка способа задания фиксироваанных колонтитулов
+        {
+            if (FixedColontitul.Checked)
+                CheckColontitul.Checked = false;
+        }        
+
+        private void ОпрограммеToolStripMenuItem_Click(object sender, EventArgs e)//Вызов формы описания программы
+        {
+            About about = new About();
+            about.ShowDialog();
         }
 
         private void Exit_Click(object sender, EventArgs e)// Завершение работы приложения
